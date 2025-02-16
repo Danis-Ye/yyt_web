@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 个人介绍部分 */
+        .profile-section {
+            text-align: center;
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .profile-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: 2px;
+            font-weight: normal;
+        }
+
+        .profile-section .intro {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .profile-section .description {
+            max-width: 600px;
+            margin: 0 auto 15px;
+            color: #666;
+        }
+
+        /* 作品展示部分 */
+        .portfolio-section {
+            padding: 40px 0;
+            background-color: #fff;
+        }
+
+        .portfolio-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            opacity: 0.8;
+            transition: opacity 0.8s ease;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.8s ease;
+            cursor: zoom-in;
+        }
+
+        .carousel-slide:hover img {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .carousel-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #666;
+        }
+
+        /* AI对话部分 */
+        .chat-section {
+            padding: 40px 0;
+            background-color: #f8f9fa;
+        }
+
+        .chat-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .chat-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background-color: #f0f7ff;
+            color: #333;
+        }
+
+        .message.user .message-content {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #4a90e2;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 0.95rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .send-button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background: #357abd;
+        }
+
+        /* 页脚部分 */
+        .footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            color: #fff;
+            font-size: 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 为不同平台添加特定的悬停颜色 */
+        .social-link[data-platform="wechat"]:hover {
+            color: #07C160;
+        }
+
+        .social-link[data-platform="xiaohongshu"]:hover {
+            color: #FE2C55;
+        }
+
+        .social-link[data-platform="douyin"]:hover {
+            color: #000000;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .social-link[data-platform="bilibili"]:hover {
+            color: #FB7299;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .profile-section h1 {
+                font-size: 2.8rem;
+            }
+
+            .carousel-slide img {
+                height: 300px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+
+        /* 在现有样式的顶部添加 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #007bff;
+            background-color: #f8f9fa;
+        }
+
+        .nav-link.active {
+            color: #007bff;
+            background-color: #e9ecef;
+        }
+
+        /* 添加响应式菜单按钮 */
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .menu-button {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 10px 0;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .nav-link {
+                padding: 10px 20px;
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* 个人简介布局样式 */
+        .profile-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            text-align: left;
+            flex: 1;
+        }
+
+        .profile-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 响应式设计补充 */
+        @media (max-width: 768px) {
+            .profile-content {
+                flex-direction: column-reverse;
+                gap: 20px;
+            }
+
+            .profile-info {
+                text-align: center;
+            }
+
+            .profile-avatar {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @font-face {
+            font-family: 'ShouJinTi';
+            src: url('./fonts/ShouJinTi.ttf') format('truetype');
+        }
+
+        /* 视频展示部分样式 */
+        .video-section {
+            padding: 40px 0;
+            background-color: #f8f9fa;
+        }
+
+        .video-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto 40px;  /* 添加底部间距 */
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .video-item {
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            cursor: zoom-in;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .video-item:hover .video-thumbnail {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .video-title {
+            padding: 10px;
+            background: #fff;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* 添加自定义图标 */
+        @font-face {
+            font-family: 'custom-icons';
+            src: url('data:application/x-font-woff2;charset=utf-8;base64,YOUR_BILIBILI_ICON_BASE64');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* 自定义小红书图标 */
+        .icon-xiaohongshu::before {
+            content: "小红书";
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 自定义B站图标 */
+        .icon-bilibili::before {
+            content: "B站";
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .video-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 图片预览样式 */
+        .image-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: zoom-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .image-preview.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-image {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .video-thumbnail {
+            cursor: zoom-in;
+        }
+
+        /* 图片预览样式补充 */
+        .image-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .preview-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .preview-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 过程展示部分样式 */
+        .process-title {
+            text-align: center;
+            margin: 40px 0 20px;
+            color: #2c3e50;
+        }
+
+        .process-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .process-item {
+            cursor: zoom-in;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .process-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .process-item:hover .process-image {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 页眉导航 -->
+        <header class="header">
+            <div class="header-container">
+                <a href="#" class="logo">
+                    <i class="fas fa-code logo-icon"></i>
+                    <span class="logo-text">{{ profile.name }}</span>
+                </a>
+                <button class="menu-button" @click="toggleMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="nav-menu" :class="{ show: isMenuOpen }">
+                    <a href="javascript:void(0)" 
+                       v-for="item in menuItems" 
+                       :key="item.id"
+                       :class="['nav-link', { active: currentSection === item.id }]"
+                       @click="scrollToSection(item.id)">
+                        {{ item.name }}
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 个人介绍部分 -->
+        <section id="about" class="profile-section">
+            <div class="container">
+                <div class="profile-content">
+                    <div class="profile-info">
+                        <h1>{{ profile.name }}</h1>
+                        <p class="intro">{{ profile.title }}</p>
+                        <p class="description">{{ profile.description }}</p>
+                        <p class="contact">📧 {{ profile.email }}</p>
+                        <p class="contact">📱 {{ profile.phone }}</p>
+                    </div>
+                    <div class="profile-avatar">
+                        <img :src="profile.avatar" alt="个人头像">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品展示部分 -->
+        <section id="portfolio" class="portfolio-section">
+            <div class="container">
+                <h2>作品展示</h2>
+                <div class="carousel">
+                    <button class="carousel-button prev" @click="prevSlide">❮</button>
+                    <div class="carousel-track" :style="carouselStyle">
+                        <div v-for="(image, index) in portfolio" 
+                             :key="index" 
+                             :class="['carousel-slide', { active: currentSlide === index }]">
+                            <img :src="image.url" 
+                                 :alt="image.description"
+                                 @click="previewImage(image.url)">
+                        </div>
+                    </div>
+                    <button class="carousel-button next" @click="nextSlide">❯</button>
+                </div>
+                <div class="carousel-dots">
+                    <div v-for="(_, index) in portfolio" 
+                         :key="index"
+                         @click="currentSlide = index"
+                         :class="['dot', { active: currentSlide === index }]">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 视频展示部分 -->
+        <section id="videos" class="video-section">
+            <div class="container">
+                <h2>视频展示</h2>
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video 
+                            :src="currentVideo.url"
+                            width="100%"
+                            height="auto"
+                            controls
+                            controlsList="nodownload"
+                            preload="metadata">
+                            您的浏览器不支持 HTML5 视频播放。
+                        </video>
+                    </div>
+                </div>
+
+                <h3 class="process-title">过程展示</h3>
+                <div class="process-list">
+                    <div v-for="(image, index) in processImages" 
+                         :key="index"
+                         class="process-item"
+                         @click="previewImage(image.url)">
+                        <img :src="image.url" 
+                             :alt="image.title"
+                             class="process-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图片预览组件 -->
+        <div v-if="previewVisible" 
+             :class="['image-preview', { visible: previewVisible }]"
+             @click.self="closePreview">
+            <img :src="previewImageUrl" 
+                 class="preview-image" 
+                 alt="预览图片">
+            <div class="preview-close" @click="closePreview">×</div>
+        </div>
+
+        <!-- AI对话部分 -->
+        <section id="chat" class="chat-section">
+            <div class="container">
+                <h2>AI助手</h2>
+                <div class="chat-container">
+                    <div class="chat-messages" ref="chatMessages">
+                        <div v-for="(msg, index) in messages" 
+                             :key="index" 
+                             :class="['message', msg.isUser ? 'user' : 'bot']">
+                            <div class="message-content">{{ msg.text }}</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" 
+                               v-model="newMessage" 
+                               @keyup.enter="sendMessage"
+                               @focus="showWelcomeMessage"
+                               placeholder="输入你想说的..." 
+                               class="chat-input">
+                        <button @click="sendMessage" class="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚部分 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="social-links">
+                    <a v-for="link in socialLinks" 
+                       :key="link.platform"
+                       :href="link.url" 
+                       :data-platform="link.platform"
+                       class="social-link" 
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       @click="openSocialLink(link.url)">
+                        <i :class="[link.icon, link.platform === 'xiaohongshu' ? 'icon-xiaohongshu' : '', 
+                                    link.platform === 'bilibili' ? 'icon-bilibili' : '']"></i>
+                    </a>
+                </div>
+                <p class="copyright">© {{ new Date().getFullYear() }} 叶彦廷. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    currentSlide: 0,
+                    autoPlayInterval: null,
+                    newMessage: '',
+                    profile: {
+                        name: '叶彦廷',
+                        title: '湖南大学行政管理专业',
+                        description: 'AI爱好者',
+                        email: '1462673962@qq.com',
+                        phone: '17871853623',
+                        avatar: './images/avatar.jpg'
+                    },
+                    messages: [
+                        // 初始不显示任何消息
+                        // { text: '你好！我是AI助手，很高兴认识你！', isUser: false }
+                    ],
+                    portfolio: [
+                        { url: './images/1.jpg', description: '项目1' },
+                        { url: './images/2.jpg', description: '项目2' },
+                        { url: './images/3.jpg', description: '项目3' },
+                        { url: './images/4.jpg', description: '项目4' }
+                    ],
+                    socialLinks: [
+                        { platform: 'wechat', url: 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=gh_7b52e2e997ca', icon: 'fab fa-weixin' },
+                        { platform: 'xiaohongshu', url: 'https://www.xiaohongshu.com/', icon: 'fas fa-book-open' },
+                        { platform: 'douyin', url: 'https://www.douyin.com/', icon: 'fab fa-tiktok' },
+                        { platform: 'bilibili', url: 'https://www.bilibili.com/', icon: 'fab fa-bilibili' }
+                    ],
+                    isMenuOpen: false,
+                    currentSection: 'about',
+                    menuItems: [
+                        { id: 'about', name: '关于我' },
+                        { id: 'portfolio', name: '作品展示' },
+                        { id: 'videos', name: '视频展示' },
+                        { id: 'chat', name: 'AI助手' },
+                        { id: 'contact', name: '联系我' }
+                    ],
+                    currentVideoIndex: 0,
+                    videos: [
+                        {
+                            title: '过程展示',
+                            url: './videos/video1.mp4',
+                        }
+                    ],
+                    processImages: [
+                        { url: './images/process1.jpg', title: '过程展示' },
+                        { url: './images/process2.jpg', title: '过程展示' },
+                        { url: './images/process3.jpg', title: '过程展示' },
+                        { url: './images/process4.jpg', title: '过程展示' }
+                    ],
+                    previewVisible: null,
+                    previewImageUrl: ''
+                }
+            },
+            computed: {
+                carouselStyle() {
+                    return {
+                        transform: `translateX(-${this.currentSlide * 100}%)`
+                    }
+                },
+                currentVideo() {
+                    return this.videos[this.currentVideoIndex];
+                }
+            },
+            methods: {
+                sendMessage() {
+                    if (this.newMessage.trim()) {
+                        this.messages.push({
+                            text: this.newMessage,
+                            isUser: true
+                        });
+                        
+                        const userMessage = this.newMessage;
+                        this.newMessage = '';
+
+                        setTimeout(() => {
+                            this.botReply(userMessage);
+                        }, 1000);
+                    }
+                },
+                botReply(userMessage) {
+                    fetch('https://api.deepseek.com/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer sk-2e891***********************a84b'
+                        },
+                        body: JSON.stringify({
+                            model: 'deepseek-chat',
+                            messages: [
+                                {"role": "system", "content": "你是一个友好的助手，用简短的语言回答问题。"},
+                                {"role": "user", "content": userMessage}
+                            ],
+                            stream: false
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const reply = data.choices[0].message.content;
+                        this.messages.push({
+                            text: reply,
+                            isUser: false
+                        });
+                        
+                        this.$nextTick(() => {
+                            const chatMessages = this.$refs.chatMessages;
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        this.messages.push({
+                            text: "抱歉，我现在无法回答。请稍后再试。",
+                            isUser: false
+                        });
+                    });
+                },
+                nextSlide() {
+                    this.currentSlide = (this.currentSlide + 1) % this.portfolio.length;
+                },
+                prevSlide() {
+                    this.currentSlide = (this.currentSlide - 1 + this.portfolio.length) % this.portfolio.length;
+                },
+                startAutoPlay() {
+                    this.autoPlayInterval = setInterval(() => {
+                        this.nextSlide();
+                    }, 3000);
+                },
+                stopAutoPlay() {
+                    if (this.autoPlayInterval) {
+                        clearInterval(this.autoPlayInterval);
+                        this.autoPlayInterval = null;
+                    }
+                },
+                toggleMenu() {
+                    this.isMenuOpen = !this.isMenuOpen;
+                },
+                scrollToSection(sectionId) {
+                    const element = document.getElementById(sectionId);
+                    if (element) {
+                        // 添加一点偏移量来考虑固定导航栏的高度
+                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        this.currentSection = sectionId;
+                        this.isMenuOpen = false;
+                    }
+                },
+                selectVideo(index) {
+                    this.currentVideoIndex = index;
+                    this.$nextTick(() => {
+                        const videoElement = document.querySelector('.video-wrapper video');
+                        if (videoElement) {
+                            videoElement.load();
+                        }
+                    });
+                },
+                openSocialLink(url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                },
+                previewImage(url) {
+                    this.previewImageUrl = url;
+                    this.previewVisible = true;
+                },
+                closePreview() {
+                    this.previewVisible = false;
+                    this.previewImageUrl = '';
+                },
+                showWelcomeMessage() {
+                    // 只在消息列表为空时显示欢迎消息
+                    if (this.messages.length === 0) {
+                        this.messages.push({
+                            text: '你好！我是AI助手，很高兴认识你！',
+                            isUser: false
+                        });
+                    }
+                }
+            },
+            mounted() {
+                this.startAutoPlay();
+
+                const carousel = document.querySelector('.carousel');
+                carousel.addEventListener('mouseenter', this.stopAutoPlay);
+                carousel.addEventListener('mouseleave', this.startAutoPlay);
+
+                window.addEventListener('scroll', () => {
+                    const sections = this.menuItems.map(item => document.getElementById(item.id));
+                    const scrollPosition = window.scrollY + 100;
+
+                    sections.forEach((section, index) => {
+                        if (section) {
+                            const sectionTop = section.offsetTop;
+                            const sectionBottom = sectionTop + section.offsetHeight;
+
+                            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                                this.currentSection = this.menuItems[index].id;
+                            }
+                        }
+                    });
+                });
+            },
+            beforeUnmount() {
+                this.stopAutoPlay();
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html> 
